@@ -1,7 +1,10 @@
-##About this file:
+##About this file
 This is a WordPress plugin that will show all your MapMyPhotos photos and your basic profile information on either a Blog Post or Page.
 
-##Setup:
+##About MapMyPhotos
+A free service where you can create your own photo gallery and plot your photos on a world map.  Sign up for free at https://www.mapmyphotos.net/#/sign-up
+
+##Setup
 1. Move this file into your WordPress plugin directory location here : /wp-content/plugins/mmp-simple-gallery
 2. Navigate to wp-admin
 3. Goto the plugins page
