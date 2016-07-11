@@ -169,6 +169,9 @@ function do_mapmyphotos_login($mmpUsernameOrEmail, $mmpPassword){
     $submitLoginResponse = curl_exec($ch);
     
     $submitLoginObjResponse = json_decode($submitLoginResponse);
+        
+    // close cURL resource, and free up system resources
+    curl_close($ch);
 
     return $submitLoginObjResponse;
 }
@@ -252,6 +255,9 @@ function getHtmlContent( $atts ) {
                                                                                                                             
         $photosResponse         = curl_exec($ch);
         $photosObjResponse      = json_decode($photosResponse);
+        
+        // close cURL resource, and free up system resources
+        curl_close($ch);
 
         if
         (
