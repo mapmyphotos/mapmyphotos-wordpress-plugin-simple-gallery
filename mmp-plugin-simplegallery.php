@@ -51,6 +51,42 @@ function getPluginOptions() {
             </p>
 
             <p>
+                <label><?php _e("Display Profile Information:", "mmp-simple-gallery"); ?></label>
+                <input type="checkbox" id="mmp-simple-gallery-displayprofile" name="mmp-simple-gallery-displayprofile" />
+                <script>
+                    var bDisplayProfile = <?php echo get_option('mmp-simple-gallery-displayprofile'); ?>;
+                    var ele = document.getElementById("mmp-simple-gallery-displayprofile");
+
+                    if(bDisplayProfile != true)
+                    {
+                        ele.removeAttribute('checked');
+                    }
+                    else
+                    {
+                        ele.setAttribute('checked', 'checked');
+                    }
+                </script>
+            </p>
+
+            <p>
+                <label><?php _e("Display Photo Details:", "mmp-simple-gallery"); ?></label>
+                <input type="checkbox" id="mmp-simple-gallery-displayphotodetails" name="mmp-simple-gallery-displayphotodetails" />
+                <script>
+                    var bDisplayPhotoDetails = <?php echo get_option('mmp-simple-gallery-displayphotodetails'); ?>;
+                    var ele = document.getElementById("mmp-simple-gallery-displayphotodetails");
+
+                    if(bDisplayPhotoDetails != true)
+                    {
+                        ele.removeAttribute('checked');
+                    }
+                    else
+                    {
+                        ele.setAttribute('checked', 'checked');
+                    }
+                </script>
+            </p>
+
+            <p>
                 After successful configuration, add your photos to any Page or Blog Post by adding the following tag to the post contents:<br/>
                 <pre>[mapmyphotos_simplegallery]</pre>
             </p>
@@ -108,6 +144,9 @@ function update_mmpsimplegallery_settings() {
     // Get the options that were sent
     $UserName = (!empty($_POST["mmp-simple-gallery-username"])) ? $_POST["mmp-simple-gallery-username"] : NULL;
     $Password = (!empty($_POST["mmp-simple-gallery-password"])) ? $_POST["mmp-simple-gallery-password"] : NULL;
+    $DisplayProfile = (!empty($_POST["mmp-simple-gallery-displayprofile"])) ? $_POST["mmp-simple-gallery-displayprofile"] : NULL;
+    $DisplayPhotoDetails = (!empty($_POST["mmp-simple-gallery-displayphotodetails"])) ? $_POST["mmp-simple-gallery-displayphotodetails"] : NULL; 
+
 
     // Validation would go here
 
@@ -124,8 +163,10 @@ function update_mmpsimplegallery_settings() {
 
     if($validationStatus == 'success'){
         // Update the values
-        update_option( "mmp-simple-gallery-username", $UserName, TRUE );
-        update_option("mmp-simple-gallery-password", $Password, TRUE);
+        update_option(  "mmp-simple-gallery-username"           , $UserName         , TRUE);
+        update_option(  "mmp-simple-gallery-password"           , $Password         , TRUE);
+        update_option(  "mmp-simple-gallery-displayprofile"     , $DisplayProfile == "on" ? true : false   , TRUE);
+        update_option(  "mmp-simple-gallery-displayphotodetails", $DisplayPhotoDetails == "on" ? true : false   , TRUE);
     }
 
     // Redirect back to settings page
@@ -188,6 +229,8 @@ function getHtmlContent( $atts ) {
 
         $mmpUsernameOrEmail         = get_option('mmp-simple-gallery-username');
         $mmpPassword                = get_option('mmp-simple-gallery-password');
+        $bDisplayProfile            = get_option("mmp-simple-gallery-displayprofile");
+        $bDisplayPhotoDetails       = get_option("mmp-simple-gallery-displayphotodetails");
 
         $baseAPIUrl                 = "https://x0nm4rewz5.execute-api.ap-northeast-1.amazonaws.com/Production";
         $apiRequestContentType      = "application/json";
@@ -286,25 +329,28 @@ function getHtmlContent( $atts ) {
     if($userObj != null && count($arryPhotos) > 0)
     {
         //PROFILE INFORMATION
-        $HTMLOutput .= "<div style='display:block;float:left;'><img style='width:100px;height:100px;' src='".$userObj->ProfilePicture."' /></div>";
-        $HTMLOutput .= "<div style='display:block;float:left;margin-left:20px;'><h4>".$userObj->FirstName."'s photos ".
-                "</h4><br/><a target='_blank' href='https://www.mapmyphotos.net/#/view-gallery/".$userObj->UserName."' >View on MapMyPhotos</a></div><div style='clear:both;'></div>";
-
+        if($bDisplayProfile){
+            $HTMLOutput .= "<div style='display:block;float:left;'><img style='width:100px;height:100px;' src='".$userObj->ProfilePicture."' /></div>";
+            $HTMLOutput .= "<div style='display:block;float:left;margin-left:20px;'><h4>".$userObj->FirstName."'s photos ".
+                    "</h4><br/><a target='_blank' href='https://www.mapmyphotos.net/#/view-gallery/".$userObj->UserName."' >View on MapMyPhotos</a></div><div style='clear:both;'></div>";
+        }
         //POPULAR PHOTOS
         foreach($arryPhotos as $thisPhoto)
         {
             $dtDateTaken = new DateTime($thisPhoto->DateTaken);
 
-            $HTMLOutput .= "<div style='display:block;float:left;width:150px;min-height:250px;padding:5px;'>".
+            $HTMLOutput .= "<div style='display:block;float:left;width:150px;min-height:".($bDisplayPhotoDetails ? "250" : "150")."px;padding:5px;'>".
                                 "<center>".
                                     "<a target='_blank' href='https://www.mapmyphotos.net/#/view-gallery/id/".$userObj->_id."/".$thisPhoto->_id."'>".
                                         "<img style='width:150px;height:150px;' src='".$thisPhoto->ThmSrc."' />".
-                                    "</a><span style='line-height:1.1!important;font-size:11px!important;'>".
+                                    "</a>";
+            if($bDisplayPhotoDetails){
+                $HTMLOutput .= "<span style='line-height:1.1!important;font-size:11px!important;'>".
                                     $thisPhoto->Caption."<br/>".
                                     $thisPhoto->City."<br/>".
-                                    ($dtDateTaken->format('jS F Y g:i A'))."<br/></span>".
-                                "</center>".
-                            "</div>";
+                                    ($dtDateTaken->format('jS F Y g:i A'))."<br/></span>";
+            }
+            $HTMLOutput .=  "</center></div>";
         }
 
         $HTMLOutput .= "<div style='clear:both;'></div>";
