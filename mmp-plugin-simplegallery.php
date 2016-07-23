@@ -181,7 +181,7 @@ function do_mapmyphotos_login($mmpUsernameOrEmail, $mmpPassword){
     /*******************
         MAKE AN API CALL TO LOGIN AND RETRIEVE THE AUTH TOKEN FROM THE RESPONSE
     *******************/
-    $baseAPIUrl                 = "https://x0nm4rewz5.execute-api.ap-northeast-1.amazonaws.com/Production";
+    $baseAPIUrl                 = "https://guty1ov3l8.execute-api.ap-southeast-2.amazonaws.com/mapmyphotos_syd/";
     $apiRequestContentType      = "application/json";
     $apiRequestMethod           = "POST";
 
@@ -232,7 +232,7 @@ function getHtmlContent( $atts ) {
         $bDisplayProfile            = get_option("mmp-simple-gallery-displayprofile");
         $bDisplayPhotoDetails       = get_option("mmp-simple-gallery-displayphotodetails");
 
-        $baseAPIUrl                 = "https://x0nm4rewz5.execute-api.ap-northeast-1.amazonaws.com/Production";
+        $baseAPIUrl                 = "https://guty1ov3l8.execute-api.ap-southeast-2.amazonaws.com/mapmyphotos_syd/";
         $apiRequestContentType      = "application/json";
         $apiRequestMethod           = "POST";
 
