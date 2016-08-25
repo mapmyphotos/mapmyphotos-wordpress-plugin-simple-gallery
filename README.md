@@ -1,5 +1,5 @@
 ##About this file
-This is a WordPress plugin that will show all your MapMyPhotos photos and your basic profile information on either a Blog Post or Page.
+This is a WordPress plugin that will show all your MapMyPhotos photos and your basic profile information on either a Blog Post or Page.  This plugin requires that the PHP cURL module is installed on your webserver where you are running WordPress.
 
 ##About MapMyPhotos
 A free service where you can create your own photo gallery and plot your photos on a world map.  Sign up for free at https://www.mapmyphotos.net/#/sign-up
